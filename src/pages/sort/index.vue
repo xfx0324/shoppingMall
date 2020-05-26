@@ -80,6 +80,7 @@ export default {
   .sideLi1{
     background-color: white;
     color: #408000;
+    border-left: 2px solid  #408000;
   }
   .div1{
     padding-left: 20px;

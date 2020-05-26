@@ -29,7 +29,7 @@
           <p class="div2-p">我的订单</p>
           <ul>
             <li>
-              <img src="/static/tabs/cart.png" alt="">
+              <img src="/static/tabs/cart.png" alt="" @click="exitLogin">
               <img src="/static/tabs/category.png" alt="">
               <img src="/static/tabs/me.png" alt="">
               <img src="/static/tabs/cart.png" alt="">
@@ -93,9 +93,17 @@ export default {
           this.flag=true
         }
       })
+    },
+    exitLogin(){
+      let arr=[]
+      wx.setStorage({
+        key:'acc',
+       data: arr
+      })
+      this.flag=false
     }
   },
-  beforeMount(){
+  onShow(){
     this.getName()
   }
 

@@ -2,7 +2,7 @@
   <div>
     <p class="p">商品清单</p>
     <ul class="ul">
-      <li v-for="(item,index) in cartList" :key="index">
+      <li v-for="(item,index) in cartList" :key="index" >
         <input
           type="checkbox"
           style="zoom:60%;"
@@ -21,18 +21,37 @@
               <span @click="addNum(item.name)">+</span>
             </p>
           </div>
-        </dt>
+        </dt> 
       </li>
     </ul>
+    <!-- 3333 -->
+    <!-- <van-swipe-cell>
+  <template>
+    <van-button square type="primary" text="选择" />
+  </template>
+  <van-cell :border="false" title="单元格" value="内容" />
+  <template>
+    <van-button square type="danger" text="删除" />
+    <van-button square type="primary" text="收藏" />
+  </template>
+</van-swipe-cell> -->
+    <div class="fixed">
     <div class="last">
       <p class="last-p1">
-        <input type="checkbox" style="zoom:60%;" class="input" :checked="checkA" @click="checkAll()" />
+        <input
+          type="checkbox"
+          style="zoom:60%;"
+          class="input"
+          :checked="checkA"
+          @click="checkAll()"
+        />
         <span>全选</span>
       </p>
       <p class="last-p2">
         <span>{{totalPrice}}</span>
         <span @click="settle()">结算{{totalNum}}</span>
       </p>
+    </div>
     </div>
   </div>
 </template>
@@ -44,7 +63,7 @@ export default {
       cartList: [],
       totalPrice: 0,
       totalNum: 0,
-      checkA: false,
+      checkA: false
     };
   },
   methods: {
@@ -53,29 +72,30 @@ export default {
         key: "cart",
         success: res => {
           this.cartList = res.data;
+          console.log(11111,this.cartList)
         }
       });
     },
     //反选
     checkAnt(name) {
-        let fla=true;
+      let fla = true;
       for (let i = 0; i < this.cartList.length; i++) {
         if (name == this.cartList[i].name) {
-            this.cartList[i].flag = !(this.cartList[i].flag)
-            break;
+          this.cartList[i].flag = !this.cartList[i].flag;
+          break;
         }
       }
       this.cartList.forEach(item => {
-          if(!item.flag){
-              this. checkA=false
-              fla=false
-          }
-      })
-      if(fla){
-          this. checkA=true
+        if (!item.flag) {
+          this.checkA = false;
+          fla = false;
+        }
+      });
+      if (fla) {
+        this.checkA = true;
       }
       console.log(this.cartList);
-      this.totalMoney()
+      this.totalMoney();
     },
     //全选
     checkAll() {
@@ -89,10 +109,10 @@ export default {
           this.cartList[i].flag = false;
         }
       }
-      this.totalMoney()
-    //   this.cartList.forEach(ele => {
-    //     ele.flag = this.checkAs;
-    //   });
+      this.totalMoney();
+      //   this.cartList.forEach(ele => {
+      //     ele.flag = this.checkAs;
+      //   });
       // console.log(this.checkA)
     },
     //加
@@ -101,14 +121,14 @@ export default {
         if (name == this.cartList[i].name) {
           this.cartList[i].num++;
           wx.setStorage({
-                  key: "cart",
-                  data: this.cartList
-                });
+            key: "cart",
+            data: this.cartList
+          });
           break;
         }
       }
       console.log(111, this.cartList);
-      this.totalMoney()
+      this.totalMoney();
     },
     //减
     minusNum(name) {
@@ -116,44 +136,63 @@ export default {
         if (name == this.cartList[i].name && this.cartList[i].num > 1) {
           this.cartList[i].num--;
           wx.setStorage({
-                  key: "cart",
-                  data: this.cartList
-                });
+            key: "cart",
+            data: this.cartList
+          });
           break;
         } else {
           // alert('产品数量不能小于1')
         }
       }
-      this.totalMoney()
+      this.totalMoney();
     },
+    //编辑数量输入框时
     editNum(name) {
-        wx.setStorage({
-                  key: "cart",
-                  data: this.cartList
-                });
-        this.totalMoney()
+      wx.setStorage({
+        key: "cart",
+        data: this.cartList
+      });
+      this.totalMoney();
+    },
+    //删除当前行
+    deletePro(){
+
     },
     //总计
     totalMoney() {
-        let total=0;
-        let num1=0;
-         this.cartList.forEach(item => {
-             if(item.flag){
-                 total+=Number(((item.num)*(item.proPrice)).toFixed(2))
-                 num1+=Number(item.num)
-             }
-      })
-      this.totalPrice=total
-      this.totalNum=num1
+      let total = 0;
+      let num1 = 0;
+      this.cartList.forEach(item => {
+        if (item.flag) {
+          total += Number((item.num * item.proPrice).toFixed(2));
+          num1 += Number(item.num);
+        }
+      });
+      this.totalPrice =Number(total.toFixed(2)) ;
+      this.totalNum = num1;
     },
     //结算
     settle() {
-
+      for (let i = this.cartList.length - 1; i >= 0; i--) {
+        if (this.cartList[i].flag) {
+          this.cartList.splice(i, 1);
+        }
+      }
+      wx.setStorage({
+        key: "cart",
+        data: this.cartList
+      });
+      this.totalPrice = 0;
+      this.totalNum = 0;
+      this.checkA=false;
     }
   },
-  beforeMount() {
-    this.getList();
-  }
+//   beforeMount() {
+//     this.getList();
+//   }
+    onShow(){
+        this.getList()
+    }
 };
 </script>
 
@@ -162,6 +201,13 @@ export default {
   padding: 3px 4px;
   background-color: rgb(241, 239, 239);
   color: gray;
+}
+.swipe{
+    display: flex;
+}
+.ul{
+    height: 84vh;
+    overflow: scroll;
 }
 .ul li {
   display: flex;
@@ -212,8 +258,10 @@ export default {
 .add input {
   text-align: center;
 }
+.fixed{
+    display: fixed;
+}
 .last {
-  margin-top: 40px;
   display: flex;
   padding-left: 8px;
   padding: 13px;

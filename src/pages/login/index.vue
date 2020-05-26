@@ -25,10 +25,10 @@ export default{
                 key: 'acc',  //key为存储的名字  可自行定义  但是注意获取时也要用这个名字
                 data: arr  //要存储的数据,是数组
         })
-        wx.setStorage({
-            key:'cart',
-            data:cartList
-        })
+        // wx.setStorage({
+        //     key:'cart',
+        //     data:cartList
+        // })
             // mpvue.switchTab({url:'/pages/my/main'})
             wx.reLaunch({url:'/pages/my/main'})
             // wx.reLaunch是可以跳转到tabBar页面的。它和wx.switchTab的区别就是：前者可以触发onLoad事件，而后者则不能触发。所以通过wx.reLaunch跳转到tabBar的方式完美解决了不能刷新的问题。
